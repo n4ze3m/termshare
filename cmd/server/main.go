@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	pkg "github.com/n4ze3m/termshare/pkg/server"
+)
 
 func main() {
-	fmt.Println("This will be server")
+	pkg.ServerInit()
 }
