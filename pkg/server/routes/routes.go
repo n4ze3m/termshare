@@ -1,18 +1,36 @@
 package routes
 
 import (
+	"context"
+	"log"
 	"net/http"
+	"os"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/n4ze3m/termshare/pkg/server/handlers"
 	"github.com/n4ze3m/termshare/pkg/server/middlewares"
 )
 
 var handler *handlers.Handler
 var middleware *middlewares.Middleware
+var ctx context.Context
+var rdb *redis.Client
 
 func init() {
-	handler = handlers.NewHandler()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	ctx = context.Background()
+	option, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	rdb = redis.NewClient(option)
+
+	handler = handlers.NewHandler(&ctx, rdb)
 	middleware = middlewares.NewMiddleware()
 }
 

@@ -1,11 +1,19 @@
 package handlers
 
+import (
+	"context"
+
+	"github.com/go-redis/redis/v8"
+)
+
 type Handler struct {
-	Session []string
+	ctx *context.Context
+	rdb *redis.Client
 }
 
-func NewHandler() *Handler {
+func NewHandler(ctx *context.Context, rdb *redis.Client) *Handler {
 	return &Handler{
-		Session: []string{},
+		ctx: ctx,
+		rdb: rdb,
 	}
 }
